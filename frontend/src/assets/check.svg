@@ -1,0 +1,18 @@
+<svg width="35px" height="35px" viewBox="0 0 84 84" xmlns="http://www.w3.org/2000/svg">
+
+  <defs>
+    <filter id="yellowGlow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <path 
+    d="M32.667 4.667h18.667V65.333H32.667zM23.333 23.333H4.667v42h18.667zM84 74.667H0V79.8h84zm-4.667 -42h-18.666v32.667h18.666z"
+    fill="yellow"
+    filter="url(#yellowGlow)"
+  />
+</svg>

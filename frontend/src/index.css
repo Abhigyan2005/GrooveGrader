@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #121212;
+  --color-purpleGrad: #16151c; 
+  --color-greenGrad:#141c17;
+}
+
+.card {
+  @apply flex flex-col;
+}
