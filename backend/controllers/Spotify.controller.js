@@ -11,14 +11,14 @@ const RedirectURI = process.env.REDIRECT_URI;
 
 export const spotifylogin = (req, res) => {
   const state = getRandomString(16);
-  let scope = "user-read-private user-read-email";
+  let scope = "user-read-private user-read-email user-top-read";
 
   console.log(state);
   res.cookie("spotify_state", state, {
     httpOnly: true, // prevents xss attacks
     secure: process.env.NODE_ENV === "production", // only sends cookie on HTTPS connections
     sameSite: "none",
-    maxAge: 5 * 60 * 1000,
+    maxAge: 4*60 * 60 * 1000,
   });
 
   res.redirect(
@@ -41,7 +41,7 @@ export const callback = async (req, res) => {
 
   console.log("Spotify sent state:", state);
   console.log("Cookie state:", req.cookies.spotify_state);
-  if (!code || !state) {
+  if (!code || sentState != state) {
     return res.send({
       success: false,
       message: "wrong or missing state or code.",
@@ -73,7 +73,7 @@ export const callback = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV == "production",
       sameSite: "none",
-      maxAge: 5 * 60 * 1000,
+      maxAge: 60 * 60 * 1000,
     });
 
     res.redirect("http://127.0.0.1:5173/dashboard");
@@ -92,3 +92,48 @@ export const userprofile = async (req, res) => {
 
   res.send(user.data);
 };
+
+export const userAlbums = async (req, res) => {
+  const token = req.cookies.access_token;
+  const albums = await axios.get("https://api.spotify.com/v1/me/albums", {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
+
+  res.send(albums.data);
+};
+
+export const userArtists = async (req, res) => {
+  const token = req.cookies.access_token;
+  const artists = await axios.get("https://api.spotify.com/v1/me/top/artists", {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
+
+  res.send(artists.data);
+};
+
+
+export const userTracks = async (req, res) => {
+  const token = req.cookies.access_token;
+  const tracks = await axios.get("https://api.spotify.com/v1/me/top/tracks", {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
+
+  res.send(tracks.data);
+}
+// export const userGenre = async (req, res) => {
+//   const token = req.cookies.access_token;
+//   const artists = await axios.get("https://api.spotify.com/v1/me/top/artists", {
+//     headers: {
+//       Authorization: "Bearer " + token,
+//     },
+//   });
+
+//   const genres = artists.data.items
+//   res.send();
+// };
