@@ -24,11 +24,5 @@ app.get("/", (req, res) => {
 
 app.use('/api', spotifyauth);
 
-app.get("/logout", (req, res) => {
-  res.clearCookie("spotify_state");
-  res.clearCookie("access_token");
-  res.send("Logged out, you can now login fresh");
-});
-
 
 app.listen(8080);

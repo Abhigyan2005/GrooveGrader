@@ -29,6 +29,7 @@ export const spotifylogin = (req, res) => {
         scope: scope,
         redirect_uri: RedirectURI,
         state: state,
+        show_dialog: true,
       })
   );
 };
@@ -126,14 +127,20 @@ export const userTracks = async (req, res) => {
 
   res.send(tracks.data);
 }
-// export const userGenre = async (req, res) => {
-//   const token = req.cookies.access_token;
-//   const artists = await axios.get("https://api.spotify.com/v1/me/top/artists", {
-//     headers: {
-//       Authorization: "Bearer " + token,
-//     },
-//   });
 
-//   const genres = artists.data.items
-//   res.send();
-// };
+export const userLogout = (req, res) => {
+  res.clearCookie("spotify_state", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "none",
+  });
+
+  res.clearCookie("access_token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "none",
+  });
+
+  return res.json({ success: true }); // gotta return if not then browser waits then aborts 
+}
+
