@@ -12,8 +12,6 @@ const RedirectURI = process.env.REDIRECT_URI;
 export const spotifylogin = (req, res) => {
   const state = getRandomString(16);
   let scope = "user-read-private user-read-email user-top-read";
-
-  console.log(state);
   res.cookie("spotify_state", state, {
     httpOnly: true, // prevents xss attacks
     secure: process.env.NODE_ENV === "production", // only sends cookie on HTTPS connections
@@ -40,8 +38,6 @@ export const callback = async (req, res) => {
 
   const sentState = req.cookies.spotify_state;
 
-  console.log("Spotify sent state:", state);
-  console.log("Cookie state:", req.cookies.spotify_state);
   if (!code || sentState != state) {
     return res.send({
       success: false,
@@ -68,7 +64,6 @@ export const callback = async (req, res) => {
     );
 
     const { access_token } = tokenresponse.data;
-    console.log(access_token);
 
     res.cookie("access_token", access_token, {
       httpOnly: true,
