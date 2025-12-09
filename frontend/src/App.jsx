@@ -16,7 +16,7 @@ function App() {
             <Route
               path="/"
               element={
-                <div className="min-h-screen w-screen flex justify-center items-center">
+                <div className="min-h-screen w-screen flex justify-center items-center mt-10">
                   <div className="relative z-5 w-full max-w-[700px] px-6">
                     <Login />
                   </div>

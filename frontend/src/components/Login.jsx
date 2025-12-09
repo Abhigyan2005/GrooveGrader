@@ -23,7 +23,7 @@ function Login() {
         </div>
 
         <div className="w-full flex flex-col sm:flex-row gap-3">
-          <div className="card flex flex-col items-center justify-center rounded-2xl bg-black/20 h-[110px] cursor-pointer hover:scale-110 transition-transform duration-290 flex-1">
+          <div className="card flex flex-col items-center justify-center rounded-2xl bg-black/20 p-6 h-[110px] cursor-pointer hover:scale-110 transition-transform duration-290 flex-1">
             <img
               className="hover:drop-shadow-[0_0_20px_red] w-[35px] h-[35px]"
               src={fire}
@@ -34,7 +34,7 @@ function Login() {
             </div>
           </div>
 
-          <div className="card flex flex-col items-center justify-center rounded-2xl bg-black/20 h-[110px] cursor-pointer hover:scale-110 transition-transform duration-290 flex-1">
+          <div className="card flex flex-col items-center justify-center rounded-2xl p-6  bg-black/20 h-[110px] cursor-pointer hover:scale-110 transition-transform duration-290 flex-1">
             <img
               className="hover:drop-shadow-[0_0_20px_yellow] w-[35px] h-[35px]"
               src={check}
@@ -45,7 +45,7 @@ function Login() {
             </div>
           </div>
 
-          <div className="card flex flex-col items-center justify-center rounded-2xl bg-black/20 h-[110px] cursor-pointer hover:scale-110 transition-transform duration-290 flex-1">
+          <div className="card flex flex-col items-center justify-center rounded-2xl p-6  bg-black/20 h-[110px] cursor-pointer hover:scale-110 transition-transform duration-290 flex-1">
             <img
               className="hover:drop-shadow-[0_0_20px_blue] w-[35px] h-[35px]"
               src={score}
