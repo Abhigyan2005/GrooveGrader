@@ -16,6 +16,8 @@ app.use(
   })
 );
 
+app.options("*", cors());
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -23,7 +25,6 @@ app.get("/", (req, res) => {
   res.send("hello world");
 });
 
-// ROUTES
 app.use("/api", spotifyauth);
 app.use("/gemini", geminiAPI);
 
