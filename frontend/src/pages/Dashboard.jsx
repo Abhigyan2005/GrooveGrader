@@ -24,20 +24,44 @@ function Dashboard() {
     return () => clearInterval(interval);
   }, []);
 
+  const getTopGenres = (artists) => {
+    const allGenres = artists.items.flatMap((a) => a.genres);
+
+    const genreCounts = allGenres.reduce((acc, genre) => {
+      //acc is an empty object
+      acc[genre] = (acc[genre] || 0) + 1;
+      return acc;
+    }, {});
+
+    return Object.entries(genreCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([name, count]) => ({ name, count }));
+  };
+
   useEffect(() => {
     const getData = async () => {
       try {
-        const [userProfile, userArtists, userTracks] = await Promise.all([
-          axios.get("http://127.0.0.1:8080/api/profile", {
-            withCredentials: true,
-          }),
-          axios.get("http://127.0.0.1:8080/api/artists", {
-            withCredentials: true,
-          }),
-          axios.get("http://127.0.0.1:8080/api/tracks", {
-            withCredentials: true,
-          }),
-        ]);
+        const [userProfile, userArtists, userTracks, userRoast] =
+          await Promise.all([
+            axios.get("http://127.0.0.1:8080/api/profile", {
+              withCredentials: true,
+            }),
+            axios.get("http://127.0.0.1:8080/api/artists", {
+              withCredentials: true,
+            }),
+            axios.get("http://127.0.0.1:8080/api/tracks", {
+              withCredentials: true,
+            }),
+            axios.post(
+              "http://127.0.0.1:8080/gemini/roast",
+              {},
+              {
+                //get req doesnt have a  req body while post req does.
+                withCredentials: true,
+              }
+            ),
+          ]);
 
         if (!userProfile.data || !userArtists.data || !userTracks.data) {
           setError("API returned incomplete data.");
@@ -48,6 +72,8 @@ function Dashboard() {
           profile: userProfile.data,
           artist: userArtists.data,
           tracks: userTracks.data,
+          roast: userRoast.data.roast,
+          topGenres: getTopGenres(userArtists.data),
         });
       } catch (error) {
         console.log(error);
@@ -103,6 +129,11 @@ function Dashboard() {
     );
   }
 
+  const calculatePopularityScore = (tracks) => {
+    const total = tracks.reduce((acc, track) => acc + track.popularity, 0);
+    return Math.round(total / tracks.length); 
+  };
+
   return (
     <>
       <div className="flex flex-col w-screen items-center h-screen text-white">
@@ -126,8 +157,49 @@ function Dashboard() {
 
           <div className="flex flex-col md:flex-row gap-10 w-full mt-5 ">
             <div className="flex flex-col w-full md:w-[50%] bg-black/50 rounded-2xl h-auto p-5">
-              <div>{/* basic metre */}</div>
-              <div>{/* gemini roast */}</div>
+              <div>
+                <div className="w-full bg-gray-700 h-4 rounded">
+                  <div
+                    className="bg-green-500 h-4 rounded"
+                    style={{
+                      width: `${calculatePopularityScore(Data.tracks.items)}%`,
+                    }}
+                  ></div>
+                </div>
+                <p className="text-white text-sm mt-1">
+                  Basic Metre: {calculatePopularityScore(Data.tracks.items)}%
+                </p>
+              </div>
+              <div className="mt-5 bg-black rounded-2xl p-5">
+                <div className="text-gray-400 font-bold mb-2">TOP GENRES</div>
+
+                <div className="flex flex-col gap-3">
+                  {Data.topGenres.map((genre) => {
+                    const widthPercent = Math.min(genre.count * 20, 100);
+                    return (
+                      <div
+                        key={genre.name}
+                        className="flex items-center gap-3 w-full"
+                      >
+                        <div className="w-32 md:w-40 text-sm truncate">
+                          {genre.name}
+                        </div>
+
+                        <div className="flex-1 bg-gray-700 h-4 rounded overflow-hidden">
+                          <div
+                            className="h-full bg-green-500 rounded transition-all duration-300"
+                            style={{ width: `${widthPercent}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="text-lg font-sans mt-10 text-justify bg-primary/99 p-4 rounded-2xl">
+                {Data.roast}
+              </div>
             </div>
             <div className="flex flex-col  w-full md:w-[50%] bg-black/50 rounded-2xl h-auto p-5">
               <div className="flex gap-4 pt-4 pb-4">
@@ -135,8 +207,10 @@ function Dashboard() {
                 <div className="font-bold text-3xl">The Evidence</div>
               </div>
               <div>
-                <div className="text-gray-400 font-bold mb-2">TOP ARTISTS</div>
-                <div className="flex flex-wrap gap-4">
+                <div className="text-gray-400 font-bold pl-2 mt-4">
+                  TOP ARTISTS
+                </div>
+                <div className="flex flex-wrap gap-2 p-5 md:p-2">
                   {Data.artist.items.slice(0, 8).map((artist) => {
                     return (
                       <div

@@ -1,5 +1,3 @@
-
-
 export function getRandomString(length) {
     let rstring = '';
 

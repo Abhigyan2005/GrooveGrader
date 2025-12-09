@@ -1,6 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import spotifyauth from "./routes/spotify.routes.js"
+import geminiAPI from "./routes/gemini.routes.js"
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 })
 
 app.use('/api', spotifyauth);
+app.use('/gemini', geminiAPI);
 
 
 app.listen(8080);
