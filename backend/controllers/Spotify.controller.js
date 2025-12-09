@@ -72,7 +72,7 @@ export const callback = async (req, res) => {
       maxAge: 60 * 60 * 1000,
     });
 
-    res.redirect("http://127.0.0.1:5173/dashboard");
+    res.redirect("https://groove-grader.vercel.app/dashboard");
   } catch (error) {
     console.log("error in callback function");
   }
