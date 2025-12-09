@@ -8,6 +8,14 @@ function Dashboard() {
   const [Data, setData] = useState(null);
   const [error, setError] = useState(null);
 
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const t = params.get("token");
+    if (t) setToken(t);
+  }, []);
+
   const messages = [
     "Analyzing your questionable taste…",
     "Looking for your top artist… hopefully it’s not Pitbull",
@@ -40,33 +48,27 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    const getData = async () => {
+    if (!token) return;
+
+    const getDataWithToken = async () => {
       try {
         const [userProfile, userArtists, userTracks, userRoast] =
           await Promise.all([
             axios.get("https://groovegrader.onrender.com/api/profile", {
-              withCredentials: true,
+              headers: { Authorization: `Bearer ${token}` },
             }),
             axios.get("https://groovegrader.onrender.com/api/artists", {
-              withCredentials: true,
+              headers: { Authorization: `Bearer ${token}` },
             }),
             axios.get("https://groovegrader.onrender.com/api/tracks", {
-              withCredentials: true,
+              headers: { Authorization: `Bearer ${token}` },
             }),
             axios.post(
               "https://groovegrader.onrender.com/gemini/roast",
               {},
-              {
-                //get req doesnt have a  req body while post req does.
-                withCredentials: true,
-              }
+              { headers: { Authorization: `Bearer ${token}` } }
             ),
           ]);
-
-        if (!userProfile.data || !userArtists.data || !userTracks.data) {
-          setError("API returned incomplete data.");
-          return;
-        }
 
         setData({
           profile: userProfile.data,
@@ -75,29 +77,21 @@ function Dashboard() {
           roast: userRoast.data.roast,
           topGenres: getTopGenres(userArtists.data),
         });
-      } catch (error) {
-        console.log(error);
+      } catch (err) {
+        console.log(err);
         setError("Failed to fetch data. Are you logged in?");
       } finally {
         setLoading(false);
       }
     };
 
-    getData();
-  }, []);
+    getDataWithToken();
+  }, [token]);
 
   const navigate = useNavigate();
 
   const handleLogout = async () => {
-    await axios.post(
-      "https://groovegrader.onrender.com/api/logout",
-      {},
-      {
-        //get req doesnt have a  req body while post req does.
-        withCredentials: true,
-      }
-    );
-
+    setToken(null); 
     navigate("/");
   };
 
@@ -131,7 +125,7 @@ function Dashboard() {
 
   const calculatePopularityScore = (tracks) => {
     const total = tracks.reduce((acc, track) => acc + track.popularity, 0);
-    return Math.round(total / tracks.length); 
+    return Math.round(total / tracks.length);
   };
 
   return (

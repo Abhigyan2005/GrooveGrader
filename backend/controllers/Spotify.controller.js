@@ -16,7 +16,7 @@ export const spotifylogin = (req, res) => {
     httpOnly: true, // prevents xss attacks
     secure: process.env.NODE_ENV === "production", // only sends cookie on HTTPS connections
     sameSite: "none",
-    maxAge: 4*60 * 60 * 1000,
+    maxAge: 4 * 60 * 60 * 1000,
   });
 
   res.redirect(
@@ -72,70 +72,61 @@ export const callback = async (req, res) => {
       maxAge: 60 * 60 * 1000,
     });
 
-    res.redirect("https://groove-grader.vercel.app/dashboard");
+    res.redirect(
+      `https://groove-grader.vercel.app/dashboard?token=${access_token}`
+    );
   } catch (error) {
     console.log("error in callback function");
   }
 };
 
 export const userprofile = async (req, res) => {
-  const token = req.cookies.access_token;
-  const user = await axios.get("https://api.spotify.com/v1/me", {
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-  });
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "No token provided" });
+    }
 
-  res.send(user.data);
-};
+    const token = authHeader.split(" ")[1];
 
-export const userAlbums = async (req, res) => {
-  const token = req.cookies.access_token;
-  const albums = await axios.get("https://api.spotify.com/v1/me/albums", {
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-  });
+    const user = await axios.get("https://api.spotify.com/v1/me", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-  res.send(albums.data);
+    res.json(user.data);
+  } catch (error) {
+    console.error("Error fetching user profile:", error.message);
+    res.status(500).json({ message: "Failed to fetch user profile" });
+  }
 };
 
 export const userArtists = async (req, res) => {
-  const token = req.cookies.access_token;
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
+  const token = authHeader.split(" ")[1];
+
   const artists = await axios.get("https://api.spotify.com/v1/me/top/artists", {
-    headers: {
-      Authorization: "Bearer " + token,
-    },
+    headers: { Authorization: `Bearer ${token}` },
   });
 
-  res.send(artists.data);
+  res.json(artists.data);
 };
 
-
 export const userTracks = async (req, res) => {
-  const token = req.cookies.access_token;
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
+  const token = authHeader.split(" ")[1];
+
   const tracks = await axios.get("https://api.spotify.com/v1/me/top/tracks", {
-    headers: {
-      Authorization: "Bearer " + token,
-    },
+    headers: { Authorization: `Bearer ${token}` },
   });
-
-  res.send(tracks.data);
-}
-
-export const userLogout = (req, res) => {
-  res.clearCookie("spotify_state", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
-  });
-
-  res.clearCookie("access_token", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
-  });
-
-  return res.json({ success: true }); // gotta return if not then browser waits then aborts 
-}
+  
+  res.json(tracks.data);
+};
 
