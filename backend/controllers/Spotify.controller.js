@@ -12,12 +12,6 @@ const RedirectURI = process.env.REDIRECT_URI;
 export const spotifylogin = (req, res) => {
   const state = getRandomString(16);
   let scope = "user-read-private user-read-email user-top-read";
-  res.cookie("spotify_state", state, {
-    httpOnly: true, // prevents xss attacks
-    secure: process.env.NODE_ENV === "production", // only sends cookie on HTTPS connections
-    sameSite: "none",
-    maxAge: 4 * 60 * 60 * 1000,
-  });
 
   res.redirect(
     "https://accounts.spotify.com/authorize?" +
@@ -36,12 +30,10 @@ export const callback = async (req, res) => {
   const code = req.query.code;
   const state = req.query.state;
 
-  const sentState = req.cookies.spotify_state;
-
-  if (!code || sentState != state) {
+  if (!code || !state) {
     return res.send({
       success: false,
-      message: "wrong or missing state or code.",
+      message: "missing state or code.",
     });
   }
 
@@ -64,13 +56,6 @@ export const callback = async (req, res) => {
     );
 
     const { access_token } = tokenresponse.data;
-
-    res.cookie("access_token", access_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV == "production",
-      sameSite: "none",
-      maxAge: 60 * 60 * 1000,
-    });
 
     res.redirect(
       `https://groove-grader.vercel.app/dashboard?token=${access_token}`

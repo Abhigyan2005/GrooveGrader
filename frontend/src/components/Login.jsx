@@ -3,7 +3,7 @@ import fire from "../assets/fire.svg";
 import check from "../assets/check.svg";
 import score from "../assets/score.svg";
 import play from "../assets/play.svg";
-import axios from "axios";
+
 
 function Login() {
   return (
