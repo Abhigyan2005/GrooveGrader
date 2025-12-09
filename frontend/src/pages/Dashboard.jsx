@@ -44,17 +44,17 @@ function Dashboard() {
       try {
         const [userProfile, userArtists, userTracks, userRoast] =
           await Promise.all([
-            axios.get("http://127.0.0.1:8080/api/profile", {
+            axios.get("https://groovegrader.onrender.com/api/profile", {
               withCredentials: true,
             }),
-            axios.get("http://127.0.0.1:8080/api/artists", {
+            axios.get("https://groovegrader.onrender.com/api/artists", {
               withCredentials: true,
             }),
-            axios.get("http://127.0.0.1:8080/api/tracks", {
+            axios.get("https://groovegrader.onrender.com/api/tracks", {
               withCredentials: true,
             }),
             axios.post(
-              "http://127.0.0.1:8080/gemini/roast",
+              "https://groovegrader.onrender.com/gemini/roast",
               {},
               {
                 //get req doesnt have a  req body while post req does.
@@ -90,7 +90,7 @@ function Dashboard() {
 
   const handleLogout = async () => {
     await axios.post(
-      "http://127.0.0.1:8080/api/logout",
+      "https://groovegrader.onrender.com/api/logout",
       {},
       {
         //get req doesnt have a  req body while post req does.

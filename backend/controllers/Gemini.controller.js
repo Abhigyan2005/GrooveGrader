@@ -6,10 +6,10 @@ dotenv.config();
 export const UserRoast = async (req, res) => {
   const cookies = req.headers.cookie;
   try {
-    const artistRes = await axios.get("http://127.0.0.1:8080/api/artists", {
+    const artistRes = await axios.get("https://groovegrader.onrender.com/api/artists", {
       headers: { Cookie: cookies },
     });
-    const trackRes = await axios.get("http://127.0.0.1:8080/api/tracks", {
+    const trackRes = await axios.get("https://groovegrader.onrender.com/api/tracks", {
       headers: { Cookie: cookies },
     });
 

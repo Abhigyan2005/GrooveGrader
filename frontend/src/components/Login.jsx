@@ -22,37 +22,45 @@ function Login() {
           <span className="text-gray-800">WARNING: It's Brutally Honest</span>
         </div>
 
-        <div className="w-full flex gap-3 ">
-          <div className="card flex flex-col items-center justify-center rounded-2xl bg-black/20 flex-1 h-[110px] cursor-pointer hover:scale-110 transition-transform duration-290 ">
+        <div className="w-full flex flex-col sm:flex-row gap-3">
+          <div className="card flex flex-col items-center justify-center rounded-2xl bg-black/20 h-[110px] cursor-pointer hover:scale-110 transition-transform duration-290 flex-1">
             <img
-              className="hover:drop-shadow-[0_0_20px_red] w-[35px] h-[35px] "
+              className="hover:drop-shadow-[0_0_20px_red] w-[35px] h-[35px]"
               src={fire}
               alt=""
             />
-            <div className="font-bold text-gray-300">Savage Roast</div>
+            <div className="font-bold text-gray-300 text-center text-sm">
+              Savage Roast
+            </div>
           </div>
-          <div className="card flex flex-col items-center justify-center rounded-2xl bg-black/20 flex-1 h-[110px] cursor-pointer hover:scale-110 transition-transform duration-290 ">
+
+          <div className="card flex flex-col items-center justify-center rounded-2xl bg-black/20 h-[110px] cursor-pointer hover:scale-110 transition-transform duration-290 flex-1">
             <img
               className="hover:drop-shadow-[0_0_20px_yellow] w-[35px] h-[35px]"
               src={check}
               alt=""
             />
-            <div className="font-bold text-gray-300">Stats Check</div>
+            <div className="font-bold text-gray-300 text-center text-sm">
+              Stats Check
+            </div>
           </div>
-          <div className="card flex flex-col items-center justify-center rounded-2xl bg-black/20 flex-1 h-[110px] cursor-pointer hover:scale-110 transition-transform duration-290">
+
+          <div className="card flex flex-col items-center justify-center rounded-2xl bg-black/20 h-[110px] cursor-pointer hover:scale-110 transition-transform duration-290 flex-1">
             <img
               className="hover:drop-shadow-[0_0_20px_blue] w-[35px] h-[35px]"
               src={score}
               alt=""
             />
-            <div className="font-bold text-gray-300">Taste Score</div>
+            <div className="font-bold text-gray-300 text-center text-sm">
+              Taste Score
+            </div>
           </div>
         </div>
 
         <div className="w-full bg-black/20 rounded-2xl h-[220px] flex flex-col items-center justify-center p-6 gap-4">
           <button
             onClick={() =>
-              (window.location.href = "http://127.0.0.1:8080/api/login")
+              (window.location.href = "https://groovegrader.onrender.com/api/login")
             }
             className="w-full border border-green-600 text-green-600 font-bold py-4 rounded-xl flex items-center justify-center gap-2 bg-black/20 hover:bg-white hover:text-black cursor-pointer transition-all duration-300"
           >
