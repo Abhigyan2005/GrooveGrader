@@ -22,7 +22,7 @@ export const spotifylogin = (req, res) => {
         redirect_uri: RedirectURI,
         state: state,
         show_dialog: true,
-      }),
+      })
   );
 };
 
@@ -52,17 +52,16 @@ export const callback = async (req, res) => {
             Buffer.from(clientID + ":" + clientSecret).toString("base64"),
           "Content-Type": "application/x-www-form-urlencoded",
         },
-      },
+      }
     );
 
     const { access_token } = tokenresponse.data;
 
     res.redirect(
-      `https://groove-grader.vercel.app/dashboard?token=${access_token}`,
+      `https://groove-grader.vercel.app/dashboard?token=${access_token}`
     );
   } catch (error) {
-    console.log("CALLBACK ERROR:", error.response?.data || error.message);
-    res.status(500).json({ message: error.response?.data || error.message });
+    console.log("error in callback function");
   }
 };
 
@@ -93,8 +92,7 @@ export const userArtists = async (req, res) => {
   }
 
   const token = authHeader.split(" ")[1];
-  console.log("AUTH HEADER:", authHeader);
-  console.log("TOKEN:", token);
+
   const artists = await axios.get("https://api.spotify.com/v1/me/top/artists", {
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -113,6 +111,7 @@ export const userTracks = async (req, res) => {
   const tracks = await axios.get("https://api.spotify.com/v1/me/top/tracks", {
     headers: { Authorization: `Bearer ${token}` },
   });
-
+  
   res.json(tracks.data);
 };
+
