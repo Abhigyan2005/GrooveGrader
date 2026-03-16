@@ -9,7 +9,7 @@ An AI-powered web app that analyzes your Spotify listening history and roasts yo
 
 ## Features
 
-- Gemini AI judges your music taste brutally
+- Gemini AI judges your music taste 
 - See your top artists, tracks, and genres
 - Get a popularity score based on your listening history
 
