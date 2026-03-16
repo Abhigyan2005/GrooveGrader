@@ -14,10 +14,10 @@ export const UserRoast = async (req, res) => {
     const token = authHeader.split(" ")[1];
 
     const [artistRes, trackRes] = await Promise.all([
-      axios.get("https://groovegrader.onrender.com/api/artists", {
+      axios.get("https://api.spotify.com/v1/me/top/artists", {
         headers: { Authorization: `Bearer ${token}` },
       }),
-      axios.get("https://groovegrader.onrender.com/api/tracks", {
+      axios.get("https://api.spotify.com/v1/me/top/tracks", {
         headers: { Authorization: `Bearer ${token}` },
       }),
     ]);
